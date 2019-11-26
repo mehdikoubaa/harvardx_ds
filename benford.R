@@ -1,0 +1,9 @@
+library(tidyverse)
+library(benford.analysis)
+data("corporate.payment")
+str(corporate.payment)
+c<-benford(corporate.payment$Amount)
+c
+plot(c)
+getSuspects(c,corporate.payment)
+suspectsTable(c)

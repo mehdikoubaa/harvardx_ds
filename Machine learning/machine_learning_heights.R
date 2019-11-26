@@ -62,3 +62,32 @@ y_hat <- ifelse(test_set$height > best_cutoff, "Male", "Female") %>%
   factor(levels = levels(test_set$sex))
 sensitivity(data = y_hat, reference = test_set$sex)
 specificity(data = y_hat, reference = test_set$sex)
+
+#____heights probability
+library(dslabs)
+data("heights")
+heights %>% 
+  mutate(height = round(height)) %>%
+  group_by(height) %>%
+  summarize(p = mean(sex == "Male")) %>%
+  qplot(height, p, data =.)
+
+ps <- seq(0, 1, 0.1)
+heights %>%
+  mutate(g = cut(height, quantile(height, ps), include.lowest = TRUE)) %>%
+  group_by(g) %>%
+  summarize(p = mean(sex == "Male"), height = mean(height)) %>%
+  qplot(height, p, data =.)
+
+
+Sigma <- 9*matrix(c(1,0.5,0.5,1), 2, 2)
+dat <- MASS::mvrnorm(n = 10000, c(69, 69), Sigma) %>%
+  data.frame() %>% setNames(c("x", "y"))
+plot(dat)
+
+ps <- seq(0, 1, 0.1)
+dat %>% 
+  mutate(g = cut(x, quantile(x, ps), include.lowest = TRUE)) %>%
+  group_by(g) %>%
+  summarize(y = mean(y), x = mean(x)) %>% 
+  qplot(x, y, data =.)

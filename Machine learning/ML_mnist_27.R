@@ -68,3 +68,23 @@ mnist_27$true_p %>%
   ggplot() +
   stat_contour(aes(x_1, x_2, z=p_hat), breaks=c(0.5), color="black") +
   geom_point(mapping = aes(x_1, x_2, color=y), data = mnist_27$test)
+
+#_________________exercice loess
+library(dslabs)
+library(broom)
+data("mnist_27")
+mnist_27$train %>% glm(y ~ x_2, family = "binomial", data = .) %>% tidy()
+qplot(x_2, y, data = mnist_27$train)
+
+#try to solve problem
+fit<- loess(as.numeric(y) ~ x_2,mnist_27[["train"]])
+as.data.frame(mnist_27$train) %>% mutate(smooth=predict(fit,x_2))%>%
+  ggplot(aes(x_2,y))+geom_point()+geom_line(aes(x_2,smooth),col="red")
+
+#solution
+mnist_27$train %>% 
+  mutate(y = ifelse(y=="7", 1, 0)) %>%
+  ggplot(aes(x_2, y)) + 
+  geom_smooth(method = "loess")
+
+

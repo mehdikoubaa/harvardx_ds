@@ -91,3 +91,38 @@ dat %>%
   group_by(g) %>%
   summarize(y = mean(y), x = mean(x)) %>% 
   qplot(x, y, data =.)
+
+#knn
+library(caret)
+library(dslabs)
+data("heights")
+set.seed(1)
+ind <- createDataPartition(heights$sex,times=1,p=0.5,list=FALSE)
+train_h <- heights[-ind,]
+test_h <- heights[ind,]
+#try diffrent k for estimate
+accuracy <- sapply(seq(1,101,3),function(i){
+  
+  fit <- knn3(sex~height,train_h,k=i)
+  y_hat <- predict(fit,test_h,type="class")
+  confusionMatrix(y_hat,test_h$sex)$overall[["Accuracy"]]
+})
+
+qplot(x=seq(1,101,3),y=accuracy,geom="point")
+max(accuracy)
+seq(1,101,3)[which.max(accuracy)]
+
+F1 <-  sapply(seq(1,101,3),function(i){
+  
+  fit <- knn3( sex~height,train_h,k=i)
+  y_hat <- predict(fit,test_h,type="class")
+      F_meas(y_hat,test_h$sex)
+})
+qplot(x=seq(1,101,3),y=F1,geom="point")
+
+
+max(w)
+seq(1,101,3)[min(which.max(F1))]
+
+
+

@@ -87,4 +87,41 @@ mnist_27$train %>%
   ggplot(aes(x_2, y)) + 
   geom_smooth(method = "loess")
 
+#__________Matrix exercices
+library(tidyverse)
+library(dslabs)
+if(!exists("mnist")) mnist <- read_mnist()
+x <- mnist$train$images[1:1000,]
+y <- mnist$train$labels[1:1000,]
+
+#see the 3d row which is an image of 4:
+grid <- matrix(x[3,], 28, 28)
+image(1:28, 1:28, grid)
+image(1:28, 1:28, grid[, 28:1])
+avg <- rowMeans(x)
+tibble(labels = as.factor(y), row_averages = avg) %>% 
+  qplot(labels, row_averages, data = ., geom = "boxplot") 
+
+#detect inchanging columns
+library(matrixStats)
+sds <- colSds(x)
+qplot(sds, bins = "30", color = I("black"))
+image(1:28, 1:28, matrix(sds, 28, 28)[, 28:1])
+
+#remove non informative pixels
+new_x <- x[ ,colSds(x) > 60]
+dim(new_x)
+
+#grey zone
+x <- mnist$train$images
+y <- mnist$train$labels
+
+xg <- rowMeans((x>=50 & x<=205))
+qplot(as.factor(y),xg,geom="boxplot")
+
+mean(x>=50 & x<=205) #proportion of grey zone
+
+
+
+
 

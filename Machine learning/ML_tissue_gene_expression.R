@@ -38,3 +38,7 @@ sapply(seq(1, 11, 2), function(k){
                    type = "class")
   mean(y_hat == y[test_index])
 })
+
+#train fonction with knn
+fit <- train(x, y, method = "knn", tuneGrid = data.frame(k = seq(1,7,2)))
+fit$results

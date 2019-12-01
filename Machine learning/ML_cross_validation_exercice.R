@@ -14,12 +14,21 @@ fit <- train(x_subset, y, method = "glm")
 fit$results
 
 #BiocManager
-install.packages("BiocManager")
-BiocManager::install("genefilter")
+library("BiocManager")
 library(genefilter)
+
 n <- 1000
 p <- 10000
 x <- matrix(rnorm(n*p), n, p)
 colnames(x) <- paste("x", 1:ncol(x), sep = "_")
 y <- rbinom(n, 1, 0.5) %>% factor()
 tt <- colttests(x, y)
+
+ind <-which(tt$p.value<0.01)
+length(ind)
+x_subset <-x[,ind]
+fit <- train(x_subset, y, method = "glm")
+fit$results
+
+fit2 <- train(x_subset, y, method = "knn", tuneGrid = data.frame(k = seq(101, 301, 25)))
+ggplot(fit2)

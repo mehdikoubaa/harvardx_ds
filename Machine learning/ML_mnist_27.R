@@ -121,7 +121,43 @@ qplot(as.factor(y),xg,geom="boxplot")
 
 mean(x>=50 & x<=205) #proportion of grey zone
 
+#___bootstrap
+library(dslabs)
+data("mnist_27")
+set.seed(1995)
+indexes <- createResample(mnist_27$train$y, 10)
 
+times<- sapply(1:10,function(i) sum(indexes[[i]]==7))
+sum(times)
 
+y <- rnorm(100, 0, 1)
+qnorm(0.75)
+quantile(y,0.75)
+#monte carlo simulation
+B<- 10^4
+set.seed(1)
+q75 <- replicate(B, {
+  y <- rnorm(100, 0, 1)
+  quantile(y,0.75)})
+mean(q75)
 
+#use 10 bootstrap
+set.seed(1)
+y <- rnorm(100, 0, 1)
+set.seed(1)
+ind <- createResample(y,10)
+
+me <- sapply(1:10,function(i) quantile(y[ind[[i]]],0.75))
+mean(me)
+sd(me)
+
+#solution given
+set.seed(1)
+indexes <- createResample(y, 10^4)
+q_75_star <- sapply(indexes, function(ind){
+  y_star <- y[ind]
+  quantile(y_star, 0.75)
+})
+mean(q_75_star)
+sd(q_75_star)
 

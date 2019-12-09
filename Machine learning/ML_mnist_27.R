@@ -69,7 +69,7 @@ mnist_27$true_p %>%
   stat_contour(aes(x_1, x_2, z=p_hat), breaks=c(0.5), color="black") +
   geom_point(mapping = aes(x_1, x_2, color=y), data = mnist_27$test)
 
-#_________________exercice loess
+#======exercice loess=====
 library(dslabs)
 library(broom)
 data("mnist_27")
@@ -87,7 +87,7 @@ mnist_27$train %>%
   ggplot(aes(x_2, y)) + 
   geom_smooth(method = "loess")
 
-#__________Matrix exercices
+#=======Matrix exercices====
 library(tidyverse)
 library(dslabs)
 if(!exists("mnist")) mnist <- read_mnist()
@@ -121,7 +121,7 @@ qplot(as.factor(y),xg,geom="boxplot")
 
 mean(x>=50 & x<=205) #proportion of grey zone
 
-#___bootstrap
+#=======bootstrap====
 library(dslabs)
 data("mnist_27")
 set.seed(1995)

@@ -1,3 +1,4 @@
+library(tidyverse)
 library(dslabs)
 data("tissue_gene_expression")
 dim(tissue_gene_expression$x)
@@ -188,3 +189,8 @@ t(fit_qda$finalModel$means) %>% data.frame() %>%
 
 fit_lda <- train(x, y, method = "lda", preProcess = c("center"))
 fit_lda$results["Accuracy"]
+
+#===== Matrix factorization and clustring=====
+# Q1
+d <- dist(tissue_gene_expression$x - rowMeans(tissue_gene_expression$x))
+h <- hclust(d)
